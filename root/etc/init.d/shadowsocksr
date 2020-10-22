@@ -188,12 +188,6 @@ start_rules() {
 	gfwmode="-z"
 	fi
 	
-	local dports=$(uci_get_by_type global dports 1)
-  if [ $dports = "1" ] ;then
-	proxyport=" "
-	else
-	proxyport="-m multiport --dports 22,53,80,443 "
-  fi
 
 	/usr/bin/ssr-rules \
 		-s "$server" \
@@ -206,7 +200,6 @@ start_rules() {
 		-w "$(uci_get_by_type access_control wan_fw_ips)" \
 		-p "$(uci_get_by_type access_control lan_fp_ips)" \
 		-G "$(uci_get_by_type access_control lan_gm_ips)" \
-		-D "$proxyport" \
 		$(get_arg_out) $gfwmode $ARG_UDP
 			
 	return $?
@@ -481,7 +474,6 @@ start() {
 	GLOBAL_SERVER=$switch_server
 	switch_enable=1
 	fi
-
 	if rules ;then
 	start_redir
   
